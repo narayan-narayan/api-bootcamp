@@ -32,7 +32,7 @@ app.get('/user/type/:type', async (req, res) => {
     return res.json({ users })
 })
 
-// route:           /user/:id
+// route:           /user/:_id
 // params:          id
 // description:     To get user having certain id
 app.get('/user/:_id', async (req, res) => {
@@ -52,12 +52,47 @@ app.get('/user/:_id', async (req, res) => {
 // request body:    user object
 // description:     Create a user
 app.post('/user/new', async (req, res) => {
-    const { newUser } = req.body
-    const createResponse = await userModel.create(newUser)
+    const { userData } = req.body
+    const createResponse = await userModel.create(userData)
     return res.json({
         message: 'User Created!',
         createResponse
     })
+})
+
+// route:           /user/update/:_id
+// params:          id
+// request body:    user object
+// description:     To update user having certain id
+app.put('/user/update/:_id', async (req, res) => {
+    const { _id } = req.params
+    const { userData } = req.body
+
+    const updatedUserResponse = await userModel.findByIdAndUpdate(_id, { $set: userData }, { new: true })
+
+    return res.json({ updatedUserResponse })
+})
+
+// route:           /user/delete/:_id
+// params:          id
+// description:     To delete user having certain id
+app.delete("/user/delete/:_id", async (req, res) => {
+    const { _id } = req.params
+
+    const userDeleted = await userModel.findByIdAndDelete(_id)
+
+    res.json({ message: "User Deleted", userDeleted })
+})
+
+// route:           /user/delete/:userType
+// params:          user type
+// description:     To delete user having certain user type
+app.delete("/user/delete/type/:userType", async (req, res) => {
+    const { userType } = req.params
+
+    const userDeleted = await userModel.findOneAndDelete({ userType })
+
+    res.json({ message: "User Deleted", userDeleted })
 })
 
 app.listen('4000',
