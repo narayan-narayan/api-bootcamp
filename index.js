@@ -95,7 +95,7 @@ app.delete("/user/delete/type/:userType", async (req, res) => {
     res.json({ message: "User Deleted", userDeleted })
 })
 
-app.listen('4000',
+app.listen(process.env.PORT,
     connectDB()
         .then((data) => console.log("Server ready 🚀"))
         .catch((err) => console.log(err))
